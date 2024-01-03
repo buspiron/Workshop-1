@@ -48,7 +48,10 @@ public class TaskManager {
 
     public static void menuAction(int menuChoice){
         switch (menuChoice){
-            case 1 -> listTasks();
+            case 1 -> {
+                listTasks();
+                showMenu();
+            }
             case 2 -> addTask();
             case 3 -> removeTask();
             case 4 -> {
@@ -75,7 +78,7 @@ public class TaskManager {
             System.out.println("Error loading file: " + path);
         }
         System.out.println();
-        showMenu();
+        //showMenu();
     }
 
     public static void addTask(){
@@ -116,20 +119,24 @@ public class TaskManager {
         Scanner sc = new Scanner(System.in);
         Path path = Paths.get("tasks.csv");
         int numberOfTasks = 0;
-
+        listTasks();
         try {
             List<String> wholeFile = new ArrayList<>(Files.readAllLines(path));
             numberOfTasks = wholeFile.size();
-            System.out.println(wholeFile.size());
+            //System.out.println(wholeFile.size());
             do {
-                System.out.print(ConsoleColors.RED + "What task do you want to remove (Task No.) >> ");
+                System.out.print(ConsoleColors.RED + "What task do you want to remove (Task No. or 0 to go back to menu) >> ");
                 String taskToRemove = sc.nextLine();
                 System.out.print(ConsoleColors.RESET);
-                if (taskToRemove.matches("[0-9]+") && Integer.parseInt(taskToRemove) > 0 && Integer.parseInt(taskToRemove) <= numberOfTasks) {
-                    int listPositionOfTaskToRemove = Integer.parseInt(taskToRemove);
-                    wholeFile.remove(listPositionOfTaskToRemove - 1);
-                    System.out.println("\t" + "Task " + taskToRemove + " removed.");
-                    break;
+                if (taskToRemove.matches("[0-9]+") && Integer.parseInt(taskToRemove) >= 0 && Integer.parseInt(taskToRemove) <= numberOfTasks) {
+                    if (Integer.parseInt(taskToRemove) == 0) {
+                        break;
+                    } else {
+                        int listPositionOfTaskToRemove = Integer.parseInt(taskToRemove);
+                        wholeFile.remove(listPositionOfTaskToRemove - 1);
+                        System.out.println("\t" + "Task " + taskToRemove + " removed.");
+                        break;
+                    }
                 }
             } while (true);
             try {
